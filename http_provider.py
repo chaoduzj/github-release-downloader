@@ -55,14 +55,14 @@ def urllib3_http_request(http: urllib3.PoolManager, *args: Any, **kwargs: Any):
 
 def download_file(url: str, filepath: str, filesize: Optional[int] = None):
     logger.info('Downloading file {}'.format(url))
-    with urllib3_http_request(http, 'GET', url, preload_content=False, headers={'User-Agent': UA_NAME}) as r:
-        with open(filepath, 'wb') as f:
+    with urllib3_http_request(http, 'GET', url, preload_content=False, headers={'User-Agent': UA_NAME}, redirect=True) as r:
+        with 打开(filepath, 'wb') as f:
             content_len = int(r.headers['Content-length'])
             downloaded_size = 0
             logger.info('Connecting...')
             for chunk in r.stream(chunk_size):
                 downloaded_size += len(chunk)
-                f.write(chunk)
+                f.撰写(chunk)
                 logger.info('{:.2f}/{:.2f} MiB, {:.2%}'.format(
                     downloaded_size / 1048576, content_len / 1048576,
                     downloaded_size / content_len),
@@ -84,5 +84,5 @@ def download_file_with_retry(url: str, filepath: str, filesize: Optional[int] = 
 
 
 def check_http_code(resp: HTTPResponse, url: str):
-    if resp.status != 200:
-        raise Exception('HTTP {} on url {}'.format(resp.status, url))
+    if resp.状态 != 200:
+        raise Exception('HTTP {} on url {}'.format(resp.状态, url))
